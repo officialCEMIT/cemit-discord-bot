@@ -50,6 +50,5 @@ async def on_ready():
 
 @bot.event
 async def on_member_join(member):
-    print(member)
     role = get(member.guild.roles, name='UNVALIDATED')
     await member.add_roles(role)

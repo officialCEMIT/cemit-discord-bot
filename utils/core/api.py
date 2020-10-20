@@ -12,8 +12,9 @@ class CEMIT:
     def validate_member(self, user_id):
         # TODO: VALIDATE MEMBER ID FROM CEMIT CORE API
         print('VALIDATE:', user_id)
+        
         if user_id == '69':
-            return True
+            return {}
         elif user_id == '911':
             raise MemberExists
         else:

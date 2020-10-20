@@ -1,4 +1,3 @@
-import time
 import discord 
 from decouple import config
 from utils.client import bot

@@ -1,48 +1,53 @@
+import discord
 from discord import Client, Intents
 from discord.utils import get
-from decouple import config
+
+from discord.ext import commands
+from discord.ext.commands import Bot
+
 from .core.api import CEMIT
 from .core.errors import MemberExists, MemberNotFound
 
 # Permissions bot
 intents = Intents.default()
 intents.members = True
-bot = Client(intents=intents)
+bot = commands.Bot(command_prefix='>', intents=intents)
 
 cemit = CEMIT()
 
 CHANNEL_MAP = {
     'bot': '🤖cemit-discord-bot',
-    'valid': 'validation✅'
+    'valid': '✅validation'
 }
 
-@bot.event
-async def on_message(message):
-    if message.content[:2] == '!!' and not message.author.bot:
-        q = message.content[2:].split(" ")
-        if q[0] == 'validate' and message.channel.name == CHANNEL_MAP['valid'] and len(q) > 1:
-            if (user_id := q[1]):
-                """
-                TODO: 
-                    - Check id in DB
-                    - Check if already validated
-                """
 
-                try:
-                    cemit.validate_member(user_id)
-                    role = get(message.author.guild.roles, name='MEMBER')
-                    await message.author.add_roles(role)
-                    # TODO: REMOVE UNVALIDATED
-                    await message.channel.send("Successfully Validated")
-                except MemberExists:
-                    await message.channel.send("The CEMIT member ID you sent is already exists here")
-                    await message.channel.send("If you think this is a mistake, @ an online officer to assist you")
-                except MemberNotFound:
-                    await message.channel.send("The ID you sent does not match any of the CEMIT members registered")
-                    await message.channel.send("If you think this is a mistake, @ an online officer to assist you")
-        elif q[0] == 'hello':
-            member = f"<@{message.author.id}>"
-            await message.channel.send(f"Hello {member} :)")
+@bot.command()
+async def validate(ctx, user_id):
+    if ctx.channel.name == CHANNEL_MAP['valid']:
+        """
+        TODO: 
+            - Check id in DB
+            - Check if already validated
+        """
+        try:
+            cemit.validate_member(user_id)
+            role = get(ctx.author.guild.roles, name='MEMBER')
+            await ctx.author.add_roles(role)
+            # TODO: REMOVE UNVALIDATED
+            await ctx.channel.send("Successfully Validated")
+        except MemberExists:
+            await ctx.channel.send("The CEMIT member ID you sent is already exists here")
+            await ctx.channel.send("If you think this is a mistake, @ an online officer to assist you")
+        except MemberNotFound:
+            await ctx.channel.send("The ID you sent does not match any of the CEMIT members registered")
+            await ctx.channel.send("If you think this is a mistake, @ an online officer to assist you")
+
+
+@bot.command()
+async def hello(ctx):
+    member = f"<@{ctx.author.id}>"
+    await ctx.channel.send(f"Hello {member} :)")
+
 
 @bot.event
 async def on_ready():
@@ -57,6 +62,7 @@ async def on_ready():
         print(f"DISCORD {bot.user.name}(BOT) Ready!")
         bot_channel = get(bot.get_all_channels(), name=CHANNEL_MAP['bot'])
         await bot_channel.send("I'm online!")
+
 
 @bot.event
 async def on_member_join(member):

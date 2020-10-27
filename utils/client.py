@@ -32,6 +32,8 @@ async def validate(ctx, user_id):
             cemit.validate_member(user_id)
             role = get(ctx.author.guild.roles, name='MEMBER')
             await ctx.author.add_roles(role)
+            unvalidatedRole = on_member_join.role 
+            await ctx.author.remove_roles(unvalidatedRole)
             # TODO: REMOVE UNVALIDATED
             await ctx.channel.send("Successfully Validated")
         except MemberExists:
@@ -52,10 +54,11 @@ async def hello(ctx):
 async def on_ready():
     print(f"DISCORD {bot.user.name}(BOT) Ready!")
     bot_channel = get(bot.get_all_channels(), name=CHANNEL_MAP['bot'])
-    await bot_channel.send("Im online!")
+    await bot_channel.send("I'm online!")
 
 
 @bot.event
 async def on_member_join(member):
     role = get(member.guild.roles, name='UNVALIDATED')
     await member.add_roles(role)
+    

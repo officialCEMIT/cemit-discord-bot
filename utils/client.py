@@ -48,7 +48,7 @@ async def on_message(message):
 async def on_ready():
     print(f"DISCORD {bot.user.name}(BOT) Ready!")
     bot_channel = get(bot.get_all_channels(), name=CHANNEL_MAP['bot'])
-    await bot_channel.send("I'm online!")
+    await bot_channel.send("Im online!")
 
 @bot.event
 async def on_member_join(member):

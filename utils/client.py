@@ -1,6 +1,6 @@
 from discord import Client, Intents
 from discord.utils import get
-
+from decouple import config
 from .core.api import CEMIT
 from .core.errors import MemberExists, MemberNotFound
 
@@ -46,9 +46,17 @@ async def on_message(message):
 
 @bot.event
 async def on_ready():
-    print(f"DISCORD {bot.user.name}(BOT) Ready!")
-    bot_channel = get(bot.get_all_channels(), name=CHANNEL_MAP['bot'])
-    await bot_channel.send("I'm online!")
+    try: 
+        User = config('DEV')
+        print(f"DISCORD {bot.user.name}(BOT) Ready!")
+        bot_channel = get(bot.get_all_channels(), name=CHANNEL_MAP['bot'])
+        await bot_channel.send(f"I'm online! -{User}")
+
+    except:
+
+        print(f"DISCORD {bot.user.name}(BOT) Ready!")
+        bot_channel = get(bot.get_all_channels(), name=CHANNEL_MAP['bot'])
+        await bot_channel.send("I'm online!")
 
 @bot.event
 async def on_member_join(member):

@@ -1,7 +1,7 @@
 import discord
 from discord import Client, Intents
 from discord.utils import get
-from decouple import config
+
 from discord.ext import commands
 from discord.ext.commands import Bot
 
@@ -56,7 +56,6 @@ async def on_ready():
     try: 
         User = config('DEV')
         await bot_channel.send(f"I'm online! -{User}")
-
     except:
         await bot_channel.send("I'm online!")
 

@@ -34,7 +34,8 @@ async def validate(ctx, user_id):
             cemit.validate_member(user_id)
             role = get(ctx.author.guild.roles, name='MEMBER')
             await ctx.author.add_roles(role)
-            # TODO: REMOVE UNVALIDATED
+            await ctx.author.remove_roles(get(ctx.author.guild.roles, name='UNVALIDATED'))
+            #TODO: REMOVE UNVALIDATED
             await ctx.channel.send("Successfully Validated")
         except MemberExists:
             await ctx.channel.send("The CEMIT member ID you sent is already exists here")
@@ -64,3 +65,4 @@ async def on_ready():
 async def on_member_join(member):
     role = get(member.guild.roles, name='UNVALIDATED')
     await member.add_roles(role)
+    

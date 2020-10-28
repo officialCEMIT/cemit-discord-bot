@@ -55,12 +55,9 @@ async def on_ready():
     print(f"DISCORD {bot.user.name}(BOT) Ready!")
     bot_channel = get(bot.get_all_channels(), name=CHANNEL_MAP['bot'])
     msg = "I'm Online!"
-    try:
-        if (dev := config('DEV', "")):
-            msg = f"({dev}) {msg}" 
-
-        await bot_channel.send(msg)
-    except:
+    if (dev := config('DEV', "")):
+        await bot_channel.send(msg := (f"({dev}) {msg}")) 
+    else:
         await bot_channel.send(msg)
 
 @bot.event

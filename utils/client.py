@@ -1,6 +1,8 @@
 import discord
 from discord import Client, Intents
 from discord.utils import get
+from decouple import config
+
 from discord.ext import commands
 from discord.ext.commands import Bot
 
@@ -52,8 +54,11 @@ async def hello(ctx):
 async def on_ready():
     print(f"DISCORD {bot.user.name}(BOT) Ready!")
     bot_channel = get(bot.get_all_channels(), name=CHANNEL_MAP['bot'])
-    await bot_channel.send("I'm online!")
-
+    msg = "I'm Online!"
+    if (dev := config('DEV', "")):
+        await bot_channel.send(msg := (f"({dev}) {msg}")) 
+    else:
+        await bot_channel.send(msg)
 
 @bot.event
 async def on_member_join(member):

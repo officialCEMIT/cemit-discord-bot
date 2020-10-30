@@ -33,6 +33,7 @@ async def validate(ctx, user_id):
         try:
             cemit.validate_member(user_id)
             role = get(ctx.author.guild.roles, name='MEMBER')
+            await ctx.member.delete_message()
             await ctx.author.add_roles(role)
             await ctx.author.remove_roles(get(ctx.author.guild.roles, name='UNVALIDATED'))
             #TODO: REMOVE UNVALIDATED
@@ -43,7 +44,6 @@ async def validate(ctx, user_id):
         except MemberNotFound:
             await ctx.channel.send("The ID you sent does not match any of the CEMIT members registered")
             await ctx.channel.send("If you think this is a mistake, @ an online officer to assist you")
-
 
 @bot.command()
 async def hello(ctx):

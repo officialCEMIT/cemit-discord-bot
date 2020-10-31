@@ -24,6 +24,8 @@ CHANNEL_MAP = {
 
 @bot.command()
 async def validate(ctx, user_id):
+    await ctx.channel.purge(limit=1)
+    member = f"<@{ctx.author.id}>"
     if ctx.channel.name == CHANNEL_MAP['valid']:
         """
         TODO: 
@@ -36,14 +38,13 @@ async def validate(ctx, user_id):
             await ctx.author.add_roles(role)
             await ctx.author.remove_roles(get(ctx.author.guild.roles, name='UNVALIDATED'))
             #TODO: REMOVE UNVALIDATED
-            await ctx.channel.send("Successfully Validated")
+            await ctx.channel.send(f" {member}, Congratulations! You Are Successfully Validated")
         except MemberExists:
-            await ctx.channel.send("The CEMIT member ID you sent is already exists here")
+            await ctx.channel.send(f"Hey! {member} The CEMIT member ID you sent is already exists here")
             await ctx.channel.send("If you think this is a mistake, @ an online officer to assist you")
         except MemberNotFound:
-            await ctx.channel.send("The ID you sent does not match any of the CEMIT members registered")
+            await ctx.channel.send(f"Sorry {member}, The ID you sent does not match any of the CEMIT members regstered")
             await ctx.channel.send("If you think this is a mistake, @ an online officer to assist you")
-
 
 @bot.command()
 async def hello(ctx):

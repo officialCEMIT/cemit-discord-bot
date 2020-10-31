@@ -7,4 +7,6 @@ def main():
     bot.run(token)
 
 if __name__ == "__main__":
+    # CLICKUP DEMO
+    # TEST
     main()

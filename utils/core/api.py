@@ -1,22 +1,26 @@
-import urllib3
 from decouple import config
 from .errors import MemberExists, MemberNotFound
+import requests
 
-http = urllib3.PoolManager()
 base_url = config('CORE_URL') 
 
 class CEMIT:
     def __init__(self):
         self
 
-    def validate_member(self, user_id):
-        # TODO: VALIDATE MEMBER ID FROM CEMIT CORE API
-        print('VALIDATE:', user_id)
-        
-        if user_id == '69':
-            return {}
-        elif user_id == '911':
+    def validate_member(self, user_id, name):
+        r = requests.post(
+            base_url + 'validate/', 
+            data={
+                "id": str(user_id),
+                "name": str(name)
+            }
+        )
+        data = r.json()
+        if data.get("id"):
+            return data
+        elif data.get("message") == "Already Validated":
             raise MemberExists
-        else:
+        elif r.status_code == 404:
             raise MemberNotFound
 

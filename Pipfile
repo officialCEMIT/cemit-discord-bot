@@ -10,7 +10,8 @@ autopep8 = "*"
 [packages]
 python-decouple = "*"
 "discord.py" = "*"
-urllib3 = "*"
+gitpython = "*"
+requests = "*"
 
 [requires]
 python_version = "3.8"

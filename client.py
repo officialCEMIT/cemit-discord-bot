@@ -52,21 +52,3 @@ async def on_member_join(member):
     role = get(member.guild.roles, name='UNVALIDATED')
     await member.add_roles(role)
 
-
-@bot.event
-async def on_message(message):
-    emoji_box = list("🟥🟧🟨🟩🟪🔴🟠🟡🟢🟣")
-
-    if message.content.startswith('/poll'):
-        message_body = "" # stores the choices as a message
-        choices = message.content[6:].strip().split(',') # gets the choices from the csv
-
-        if len(choices) <= 10: # checks if the choices is within the limit
-            for i in range(len(choices)): # builds the message body 
-                message_body += f"{emoji_box[i]}:  {choices[i]} \n"
-            msg = await message.channel.send(message_body) # sends the message body and store it to a variable
-
-            for i in range(len(choices)):
-                await msg.add_reaction(emoji_box[i]) # add the reaction to the message for voting
-        else: # Sends alternate message if it is over the limit
-            await message.channel.send("The limit is 10 choices only. Please try again.") 

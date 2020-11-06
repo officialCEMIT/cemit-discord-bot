@@ -51,4 +51,4 @@ async def on_ready():
 async def on_member_join(member):
     role = get(member.guild.roles, name='UNVALIDATED')
     await member.add_roles(role)
-    
+

@@ -7,4 +7,7 @@ if __name__ == "__main__":
     
     bot.load_extension("services.membership")
     bot.load_extension("services.stackoverflow")
+    bot.load_extension("services.admin")
+    bot.load_extension("services.officers")
+    bot.load_extension("services.poll")
     bot.run(token)

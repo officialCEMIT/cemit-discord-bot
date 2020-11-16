@@ -51,4 +51,16 @@ async def on_ready():
 async def on_member_join(member):
     role = get(member.guild.roles, name='UNVALIDATED')
     await member.add_roles(role)
-    
+
+@bot.event
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.MissingRole):
+        #Checks if user invoke any command from cog officers
+        if ctx.invoked_with in [str(each_command) for each_command in bot.commands if str(each_command.cog_name) == "Officers"]:
+            ctx.channel("Only officers can invoke this command!")
+    elif isinstance(error, commands.MissingPermissions):
+        #Checks if the command is in cog Admin
+        if ctx.invoked_with in [str(each_command.name) for each_command in bot.commands if str(each_command.cog_name) == "Admin"]:
+            if ctx.invoked_with == "clear":
+                await ctx.channel.purge(limit=1)
+            await ctx.channel.send(f"You are not an admin!")

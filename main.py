@@ -10,4 +10,9 @@ if __name__ == "__main__":
     bot.load_extension("services.admin")
     bot.load_extension("services.officers")
     bot.load_extension("services.poll")
+<<<<<<< Updated upstream
+=======
+    bot.load_extension("games.games")
+
+>>>>>>> Stashed changes
     bot.run(token)

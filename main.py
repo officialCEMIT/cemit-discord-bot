@@ -6,8 +6,13 @@ if __name__ == "__main__":
     token = config('BOT_TOKEN')
     
     bot.load_extension("services.membership")
+    bot.load_extension("services.stackoverflow")
     bot.load_extension("services.admin")
     bot.load_extension("services.officers")
     bot.load_extension("services.poll")
+<<<<<<< Updated upstream
+=======
+    bot.load_extension("games.games")
 
+>>>>>>> Stashed changes
     bot.run(token)

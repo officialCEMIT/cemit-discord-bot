@@ -30,7 +30,7 @@ class DiscordGames(commands.Cog):
 					users = [ctx.author]
 					game_name, mode = playable_games[game_index].split(":-:")
 					if game_index == 1:
-						from games.lib.GuessTheNumber import GuessTheNumber
+						from services.games.lib.GuessTheNumber import GuessTheNumber
 						game_library = GuessTheNumber()
 
 				action = action.lower()
@@ -39,9 +39,9 @@ class DiscordGames(commands.Cog):
 					if action in game_commands[:2]:
 						#Creates a sqlite database for active rooms
 						game_folder = "#" + str(ctx.guild.id)
-						if not path.exists(f"games/#{ctx.guild.id}"):
-							mkdir(f"games/#{ctx.guild.id}")
-						guild_game_data = sqlite3.connect(f"games/#{ctx.guild.id}/guild_game_data.db")
+						if not path.exists(f"services/games/#{ctx.guild.id}"):
+							mkdir(f"services/games/#{ctx.guild.id}")
+						guild_game_data = sqlite3.connect(f"services/games/#{ctx.guild.id}/guild_game_data.db")
 						active_rooms = guild_game_data.cursor()
 						active_rooms.execute("CREATE TABLE IF NOT EXISTS activerooms(channel_id text, users_id text, roomid text, game text)")
 						active_rooms.execute("SELECT users_id FROM activerooms")

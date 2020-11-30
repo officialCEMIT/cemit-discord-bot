@@ -9,6 +9,7 @@ from discord.ext.commands import Bot, has_permissions, is_owner, errors as d_err
 
 from os.path import exists
 from os import remove
+import sqlite3
 
 
 import git
@@ -80,10 +81,10 @@ async def on_message(message):
         if user_id != 773355955587907584:
             game_folder = "#" + str(message.guild.id)
             game_room_id = str(message.channel.id)
-            path = f"games/{game_folder}/{game_room_id}.json"
+            path = f"services/games/{game_folder}/{game_room_id}.json"
 
             #Checks if the user is the one who is trying to communicate with the bot in the game room
-            guild_game_data = sqlite3.connect(f"games/#{message.guild.id}/guild_game_data.db")
+            guild_game_data = sqlite3.connect(f"services/games/#{message.guild.id}/guild_game_data.db")
             active_rooms = guild_game_data.cursor()
             active_rooms.execute("SELECT users_id FROM activerooms WHERE channel_id = '{}'".format(message.channel.id))
             fetched_users_id = active_rooms.fetchall()
@@ -102,7 +103,7 @@ async def on_message(message):
             #Sets the game of the user
             game_room_game_index = int(message.channel.name.split('-')[0])
             if game_room_game_index == 1:
-                from games.lib.GuessTheNumber import GuessTheNumber
+                from services.games.lib.GuessTheNumber import GuessTheNumber
                 game_library = GuessTheNumber()
             #Checks the message if it has game command
             if message.content[:2] == "--":
@@ -130,7 +131,7 @@ async def on_message(message):
                     await message.channel.delete()
 
                     #Erases the room from list of active rooms
-                    guild_game_data = sqlite3.connect(f"games/#{message.guild.id}/guild_game_data.db")
+                    guild_game_data = sqlite3.connect(f"services/games/#{message.guild.id}/guild_game_data.db")
                     active_rooms = guild_game_data.cursor()
                     active_rooms.execute("DELETE FROM activerooms WHERE users_id = '{}'".format(user_id))
                     guild_game_data.commit()

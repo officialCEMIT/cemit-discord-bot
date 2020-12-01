@@ -23,5 +23,4 @@ if __name__ == "__main__":
     bot.load_extension("services.admin")
     bot.load_extension("services.officers")
     bot.load_extension("services.poll")
-    bot.load_extension("services.games.games")
     bot.run(token)

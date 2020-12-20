@@ -16,12 +16,21 @@ dev = reader.get_value("user","name")
 # Permissions bot
 intents = Intents.default()
 intents.members = True
-bot = commands.Bot(command_prefix='>', intents=intents)
+default_command_prefix = ">"
+bot = commands.Bot(command_prefix=default_command_prefix, intents=intents)
 
 CHANNEL_MAP = {
     'bot': '🤖cemit-discord-bot',
     'valid': '✅validation'
 }
+
+@bot.event
+@is_owner()
+async def on_message(message):
+    #==============================Checks if user is not a bot==============================
+    if not message.author.bot:
+        from palaro.cog import GameConfig
+        await GameConfig(bot).analyze_user_response(GameConfig(bot), message, default_command_prefix)
 
 @bot.command()
 async def hello(ctx):

@@ -13,5 +13,6 @@ class GuessTheNumber(Model):
 		database = db
 
 
-def setup():
-	db.create_tables([GuessTheNumber])
+def setup(game):
+	if game == "guess-the-number":
+		db.create_tables([GuessTheNumber])

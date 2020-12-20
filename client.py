@@ -16,12 +16,21 @@ dev = reader.get_value("user","name")
 # Permissions bot
 intents = Intents.default()
 intents.members = True
-bot = commands.Bot(command_prefix='>', intents=intents)
+default_command_prefix = ">"
+bot = commands.Bot(command_prefix=default_command_prefix, intents=intents)
 
 CHANNEL_MAP = {
     'bot': '🤖cemit-discord-bot',
     'valid': '✅validation'
 }
+
+@bot.event
+@is_owner()
+async def on_message(message):
+    #==============================Checks if user is not a bot==============================
+    if not message.author.bot:
+        from palaro.cog import GameConfig
+        await GameConfig(bot).analyze_user_response(GameConfig(bot), message, default_command_prefix)
 
 @bot.command()
 async def hello(ctx):
@@ -64,65 +73,3 @@ async def on_command_error(ctx, error):
             if ctx.invoked_with == "clear":
                 await ctx.channel.purge(limit=1)
             await ctx.channel.send(f"You are not an admin!")
-
-@bot.event
-async def on_message(message):
-    #=========================Handler if a bot tried to send a command=========================
-    try:
-        #=========================Making Sure that game channels exist=========================
-        if not get(message.guild.categories, name="Palaro"):
-            await message.guild.create_category("Palaro")
-
-        game_room_category = get(message.guild.categories, name="Palaro")
-
-        if not get(message.guild.channels, name="guess-the-number"):
-            from palaro.gtn.models import GuessTheNumber
-            game_room_channel = await message.guild.create_text_channel("guess-the-number", category=game_room_category)
-            #=========================Send rules at the top of the channel=========================
-            bot_response = GuessTheNumber(message).rules
-            for response in bot_response:
-                await game_room_channel.send(f"```\n{response}```")
-
-        #=========================Checking the message if it is sent in categories palaro=========================
-        if message.channel.category == game_room_category:
-            #=========================Make sure that the message is not from the bot=========================
-            if message.author.id != 766276001004781568:
-                #=========================Message sent in palaro category=========================
-
-                #=========================Handler if a bot tried to send a command=========================
-                try:
-                    #=========================Checks if the message is a command=========================
-                    if message.content.split()[0][0] == ">":
-                        await message.channel.purge(limit=1)
-
-                        #=========================Handler if a user or bot can not be DMed=========================
-                        try:
-                            await message.author.send(f"```\nInvoking of commands is {message.channel.name} is prohibited!```")
-                        except discord.errors.HTTPException():
-                            pass
-
-                        return
-                except IndexError:
-                    await message.channel.purge(limit=1)
-                    return
-
-                #=========================Message will now be processed by the game=========================
-                if message.channel.name == "guess-the-number":
-                    from palaro.gtn.models import GuessTheNumber
-                    bot_response, instant_response = GuessTheNumber(message).user_response(message)
-
-                #=========================Bot Responds to user that the game's ready=========================
-                for response in instant_response:
-                    #=========================Handler if a user or bot can not be DMed=========================
-                    try:
-                        await response
-                    except discord.errors.HTTPException():
-                        pass
-                for response in bot_response:
-                    await message.channel.send(f"{message.author.mention}\n```\n{response}```")
-
-        else:
-            #=========================Message not sent in palaro category=========================
-            await bot.process_commands(message)
-    except AttributeError:
-        return

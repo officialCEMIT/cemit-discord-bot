@@ -12,6 +12,8 @@ python-decouple = "*"
 "discord.py" = "*"
 gitpython = "*"
 requests = "*"
+discord = "*"
+peewee = "*"
 
 [requires]
 python_version = "3.8"

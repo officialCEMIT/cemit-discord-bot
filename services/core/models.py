@@ -1,16 +1,22 @@
 from peewee import *
 from main import db
 
-# TODO: UserDB
 
-class ChannelPoint(Model):
+class UserDatabase(Model):
     # TODO: USER DB
     # user = ForeignKeyField()
-    points = IntegerField()
+
+	#For User Main Data
+    username = TextField()
+    user_id = TextField()
+    nickname = TextField()
+    #first_name = TextField()
+    #last_name = TextField()
+    validation_date = DateField()
 
     class Meta:
         database = db
 
 
 def setup():
-    db.create_tables([ChannelPoint])
+    db.create_tables([UserDatabase])

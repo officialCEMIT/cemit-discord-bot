@@ -10,9 +10,13 @@ def startup():
     db.connect()    
 
     from services.core.models import setup as core_models
+    from palaro.models import setup as game_models
     #TODO: AUTOMATIC TABLE DETECTION
     #TODO: Migrations
     core_models()
+    game_models()
+    
+    db.close()
 
 if __name__ == "__main__":
     startup()
